@@ -3,17 +3,32 @@ import React from "react";
 import CheckBoxUnChecked from "../assets/checkbox-svgrepo-com.svg";
 import CheckBox from "../assets/checkbox-check-svgrepo-com.svg";
 import DeleteIcon from "../assets/delete-svgrepo-com.svg";
-const TodoItem = () => {
+import { useDispatch } from "react-redux";
+import { deleteTodo, updateTodo } from "../redux/slices/todoSlice";
+const TodoItem = (props) => {
+  const dispatch = useDispatch();
   return (
     <View style={styles.itemContainer}>
-      <Pressable hitSlop={10} style={styles.itemTextChecked}>
-        <CheckBoxUnChecked />
-        <CheckBox style={styles.itemCheckBoxCheckedIcon} />
+      <Pressable hitSlop={10} style={styles.itemTextChecked}
+      onPress={() => dispatch(updateTodo(props.id))}>
+        {props.state === "todo" ? (
+          <CheckBoxUnChecked />
+        ) : (
+          <CheckBox style={styles.itemCheckBoxCheckedIcon} />
+        )}
       </Pressable>
-      <Text style={[styles.itemText, styles.itemTextChecked]}>숨 숴</Text>
+      <Text
+        style={[
+          styles.itemText,
+          props.state === "done" ? styles.itemTextChecked : "",
+        ]}
+      >
+        {props.text}
+      </Text>
       <Pressable
-        style={[styles.deleteButton, styles.deleteButtonDone]}
+        style={[styles.deleteButton, props.state === 'done' ? styles.deleteButtonDone : '']}
         hitSlop={10}
+        onPress={() => dispatch(deleteTodo(props.id))}
       >
         <DeleteIcon />
       </Pressable>
